@@ -8,7 +8,7 @@ from datetime import datetime as dt
 
 current_time = dt.now()
 
-guest = Blueprint('guest', __name__,template_folder='guest_templates',static_folder='static',url_prefix='/Guest')
+guest = Blueprint('guest', __name__,template_folder='guest_templates',static_folder='guest_static',url_prefix='/Guest')
 
 
 @guest.route('login')

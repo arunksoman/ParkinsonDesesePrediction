@@ -4,7 +4,7 @@ from flask_user import login_required, current_user, roles_required
 from flask_login import logout_user
 # from model import *
 
-doctor = Blueprint('doctor', __name__,template_folder='doctor_templates',static_folder='static',url_prefix='/doctor')
+doctor = Blueprint('doctor', __name__,template_folder='doctor_templates',static_folder='doctor_static',url_prefix='/doctor')
 
 @doctor.route('/doctor_homepage')
 @login_required

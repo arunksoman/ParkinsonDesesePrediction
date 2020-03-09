@@ -1,5 +1,6 @@
 from flask_user import UserMixin, UserManager
-from Project import db, app
+from Project import db, app, admin
+from flask_admin.contrib.sqla import ModelView
 
 # Define User data-model
 class Users(db.Model, UserMixin):
@@ -13,8 +14,8 @@ class Users(db.Model, UserMixin):
     # Relationships
     roles = db.relationship('Roles', secondary='user_roles')
     doc_details = db.relationship('DoctorDetails', backref='docDetails')
-    appoinment_to_doctor = db.relationship('Appoinment', backref='doctor_appointed')
-    appoinment_for_user = db.relationship('Appoinment', backref='user_for_appoinment')
+    appoinment_to_doctor = db.relationship('Appoinment', backref='doctor_appointed', foreign_keys= 'Appoinment.doctor_id')
+    appoinment_for_user = db.relationship('Appoinment', backref='user_for_appoinment', foreign_keys='Appoinment.user_id')
 
 # Define the Role data-model
 class Roles(db.Model):
@@ -34,6 +35,10 @@ class District(db.Model):
     district_name = db.Column(db.String(50), nullable=False, unique=True)
     hospitals = db.relationship('Hospital', backref='HospitalDistrict')
     doctors = db.relationship('DoctorDetails', backref='DoctorDetailsDistrict')
+
+    def __str__(self):
+        return "{}".format((self.district_name))
+
 
 class Specialization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -68,3 +73,16 @@ class Appoinment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     appoinment_status = db.Column(db.Integer, nullable=False, default=0)
 
+class CustomDistrictView(ModelView):
+    form_columns = ['district_name']
+
+class CustomSpecialization(ModelView):
+    form_columns = ['specialization_name']
+
+
+
+
+admin.add_view(CustomDistrictView(District,db.session))
+admin.add_view(CustomSpecialization(Specialization, db.session))
+admin.add_view(ModelView(Department, db.session))
+admin.add_view(ModelView(Hospital, db.session))
