@@ -80,9 +80,3 @@ class CustomSpecialization(ModelView):
     form_columns = ['specialization_name']
 
 
-
-
-admin.add_view(CustomDistrictView(District,db.session))
-admin.add_view(CustomSpecialization(Specialization, db.session))
-admin.add_view(ModelView(Department, db.session))
-admin.add_view(ModelView(Hospital, db.session))
