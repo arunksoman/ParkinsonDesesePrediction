@@ -8,6 +8,7 @@ from flask_admin import BaseView, expose
 from Project import db, app, admin
 from ..configurations import *
 from ..Models.models import *
+import split_folders
 import base64
 
 admin_blueprint = Blueprint('admin_blueprint', __name__,template_folder='ad_template', url_prefix='/admin')
@@ -21,7 +22,9 @@ def save(encoded_data, filename):
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     return cv2.imwrite(filename, img)
 
-
+def split_dataset():
+    OUTPUT_DIR = os.path.join(ADMIN_DIR, "Output")
+    split_folders.ratio(DATASET_DIR, output=OUTPUT_DIR, seed=1337, ratio=(.8, .2))
 
 @admin_blueprint.route('datasetprep/SaveData', methods=['POST'])
 def Dataset():
@@ -53,4 +56,11 @@ class DatasetPrep(BaseView):
     def preprocess_dataset(self):
         return self.render('admin/datset_prep.html', endpoint='test')
 
+class MakeTrainTestSplit(BaseView):
+    @expose('/')
+    def preprocess_dataset(self):
+        split_dataset()
+        return self.render('admin/success.html', endpoint='test')
+    
 admin.add_view(DatasetPrep(name='Dataset Preparation'))
+admin.add_view(MakeTrainTestSplit(name='Make Train Test split'))

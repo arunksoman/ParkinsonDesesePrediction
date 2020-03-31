@@ -54,7 +54,7 @@ def signup_post():
 
     if user: # if a user is found, we want to redirect back to signup page so user can try again  
         flash('Email address already exists')
-        return redirect(url_for('guest.signup-user'))
+        return redirect(url_for('guest.signup_user'))
 
     ####################################
     ########### Role ###################
