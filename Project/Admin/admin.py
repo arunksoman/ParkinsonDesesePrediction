@@ -12,10 +12,7 @@ import split_folders
 import base64
 
 admin_blueprint = Blueprint('admin_blueprint', __name__,template_folder='ad_template', url_prefix='/admin')
-admin.add_view(CustomDistrictView(District,db.session))
-admin.add_view(CustomSpecialization(Specialization, db.session))
-admin.add_view(ModelView(Department, db.session))
-admin.add_view(ModelView(Hospital, db.session))
+
 
 def save(encoded_data, filename):
     nparr = np.fromstring(base64.b64decode(encoded_data), np.uint8)
@@ -51,6 +48,15 @@ def Dataset():
     save(base_64_image, actual_file_path)
     return "success", 200
 
+class CustomDistrictView(ModelView):
+    form_columns = ['district_name']
+
+class CustomPlaceView(ModelView):
+    form_columns = ['place_name', 'Choose District']
+
+class CustomSpecialization(ModelView):
+    form_columns = ['specialization_name']
+
 class DatasetPrep(BaseView):
     @expose('/')
     def preprocess_dataset(self):
@@ -61,6 +67,13 @@ class MakeTrainTestSplit(BaseView):
     def preprocess_dataset(self):
         split_dataset()
         return self.render('admin/success.html', endpoint='test')
-    
+
+
+admin.add_view(CustomDistrictView(District,db.session))
+admin.add_view(CustomPlaceView(Place,db.session))
+admin.add_view(CustomSpecialization(Specialization, db.session))
+admin.add_view(ModelView(Department, db.session))
+admin.add_view(ModelView(Hospital, db.session))
+
 admin.add_view(DatasetPrep(name='Dataset Preparation'))
 admin.add_view(MakeTrainTestSplit(name='Make Train Test split'))

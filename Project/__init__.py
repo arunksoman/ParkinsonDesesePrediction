@@ -5,6 +5,8 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_admin import Admin
+from .configurations import *
+
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -17,6 +19,7 @@ admin = Admin(app, name='Project', template_mode='bootstrap3')
 def create_app():
 
     app.config['SECRET_KEY'] = '9OLWxNDhfvhjvj4o83j4K4iu3545860nhgkopO'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 
     # For XAMPP
     app.config['QLALCHEMY_TRACK_MODIFICATIONS'] = False

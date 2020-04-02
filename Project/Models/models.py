@@ -1,6 +1,5 @@
 from flask_user import UserMixin, UserManager
-from Project import db, app, admin
-from flask_admin.contrib.sqla import ModelView
+from Project import db, app
 
 # Define User data-model
 class Users(db.Model, UserMixin):
@@ -16,6 +15,7 @@ class Users(db.Model, UserMixin):
     doc_details = db.relationship('DoctorDetails', backref='docDetails')
     appoinment_to_doctor = db.relationship('Appoinment', backref='doctor_appointed', foreign_keys= 'Appoinment.doctor_id')
     appoinment_for_user = db.relationship('Appoinment', backref='user_for_appoinment', foreign_keys='Appoinment.user_id')
+    details_of_user = db.relationship('User_details', backref='user_details', foreign_keys='User_details.user_id')
 
 # Define the Role data-model
 class Roles(db.Model):
@@ -33,12 +33,24 @@ user_manager = UserManager(app, db, Users)
 class District(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     district_name = db.Column(db.String(50), nullable=False, unique=True)
-    hospitals = db.relationship('Hospital', backref='HospitalDistrict')
-    doctors = db.relationship('DoctorDetails', backref='DoctorDetailsDistrict')
+    # doctors = db.relationship('DoctorDetails', backref='DoctorDetailsDistrict', foreign_keys='DoctorDetails.district_id')
+    # userdetails = db.relationship('User_details', backref='UserDetailsDistrict', foreign_keys='User_details.district_id')
+    place_details = db.relationship('Place', backref='Choose District', foreign_keys='Place.district_id')
 
     def __str__(self):
         return "{}".format((self.district_name))
 
+class Place(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    district_id = db.Column(db.Integer, db.ForeignKey('district.id'),nullable=False)
+    place_name = db.Column(db.String(50), nullable=False)
+    
+    hospital_place = db.relationship('Hospital', backref='Place', foreign_keys='Hospital.place_id')
+    doctors = db.relationship('DoctorDetails', backref='DoctorPlace', foreign_keys='DoctorDetails.place_id')
+    userdetails = db.relationship('User_details', backref='UserDetailsPlace', foreign_keys='User_details.place_id')
+
+    def __str__(self):
+        return "{}".format((self.place_name))
 
 class Specialization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,16 +67,18 @@ class Hospital(db.Model):
     hospital_address = db.Column(db.String(50), nullable=False)
     hospital_contact = db.Column(db.String(50), nullable=False)
     hospital_email = db.Column(db.String(50), nullable=False)
-    district_id = db.Column(db.Integer, db.ForeignKey('district.id'),nullable=False)
+    place_id = db.Column(db.Integer, db.ForeignKey('place.id'),nullable=False)
 
 class DoctorDetails(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    district_id = db.Column(db.Integer, db.ForeignKey('district.id'),nullable=False)
+    place_id = db.Column(db.Integer, db.ForeignKey('place.id'),nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable=False)
-    doctor_address = db.Column(db.String(50), nullable=False)
+    doctor_address = db.Column(db.String(150), nullable=False)
     doctor_contact = db.Column(db.String(50), nullable=False)
     doctor_specialization = db.Column(db.Integer, db.ForeignKey('specialization.id'),nullable=False)
     doctor_department = db.Column(db.Integer, db.ForeignKey('department.id'),nullable=False)
+    doctor_registration = db.Column(db.String(50), nullable=False)
+    doctor_image = db.Column(db.String(150), nullable=True)
 
 class Appoinment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -73,10 +87,12 @@ class Appoinment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     appoinment_status = db.Column(db.Integer, nullable=False, default=0)
 
-class CustomDistrictView(ModelView):
-    form_columns = ['district_name']
-
-class CustomSpecialization(ModelView):
-    form_columns = ['specialization_name']
-
-
+class User_details(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    place_id = db.Column(db.Integer, db.ForeignKey('place.id'),nullable=False)
+    gender = db.Column(db.String(50), nullable=False)
+    age = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    address = db.Column(db.String(150), nullable=False)
+    contact = db.Column(db.String(50), nullable=False)
+    image = db.Column(db.String(150), nullable=True)

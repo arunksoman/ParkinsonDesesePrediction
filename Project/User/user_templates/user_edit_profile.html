@@ -1,0 +1,71 @@
+{% extends 'user_layout.html' %}
+    {% block head %}
+    <script>
+        function get_place(did){
+            alert(did);
+            url = "ajaxPlace/" + did
+            fetch(url).then(data => data.text()).then(data => {
+            document.getElementById('slct_place').innerHTML = data
+            })
+        }
+    </script>
+        <title>Edit Profile</title>
+    {% endblock head %}
+
+        {% block body %}
+        <div style="margin-left:30%">
+            <div class="w3-container" style="width:300px">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="w3-panel w3-red w3-display-container" style="margin-bottom:0px">
+                            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">&times;</span>
+                            <h6>{{ messages[0] }}</h6>
+                        </div>
+                {% endif %}
+                {% endwith %}
+                <div class="w3-card-4">
+                    <div class="w3-container w3-teal">
+                    <h4 class="w3-center">Enter Details</h4>
+                </div>
+                <form action="editProfile" method="post" class="w3-container" enctype="multipart/form-data">
+                    <label for="">Name</label>
+                    <input class="w3-input" type="text" name="txt_name" value="{{ user.username }}" id="">
+                    <label for="">Email</label>
+                    <input class="w3-input" type="email" name="txt_email" id="" value={{ user.email }}>
+                    <label for=""></label>
+                    <label for="">Select District</label>
+                    <select required class="w3-select" name="slct_district" id="slct_district" onchange="get_place(this.value)">
+                        <option value="" selected disabled>Select District</option>
+                        {% for district in districts %}
+                            <option {% if(district.id == user_details.2) %} selected {% endif %} value="{{ district.id }}">{{ district.district_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="">Select Place</label>
+                    <select required class="w3-select" name="slct_place" id="slct_place">
+                        <option value="" selected disabled>Select Place</option>
+                        {% for place in places %}
+                            <option {% if(place.id == user_details.1) %} selected {% endif %} value="{{ place.id }}">{{ place.place_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <p>Gender</p>
+                    <p>
+                        <input {% if user_details.0.gender == "Male" %}checked{% endif %} required type="radio" name="rdb_gender" value="Male" id="rdb_male">
+                        <label>Male</label>
+                        <input {% if user_details.0.gender == "Female" %}checked{% endif %} required type="radio" name="rdb_gender" value="Female" id="rdb_female">
+                        <label>Female</label>
+                    </p>
+                    <label for="">Age</label>
+                    <input required class="w3-input" value={{ user_details.0.age }} type="text" name="txt_age" id="">
+                    <label for="">Address</label>
+                    <textarea required class="w3-input" name="txt_address" id="" cols="15" rows="2">{{ user_details.0.address }}</textarea>
+                    <label for="">Contact</label>
+                    <input required class="w3-input" type="text" value={{ user_details.0.contact }} name="txt_contact" id="">
+                    <label for="">Profile Picture</label>
+                    <input type="hidden" name="hfile" value="{{ user_details.0.image }}">
+                    <input type="file" name="file" id="">
+                    <input class="w3-button w3-teal w3-small" type="submit" style="margin-bottom: 10px;display:block; margin:10px 0 10px 0" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock body %}

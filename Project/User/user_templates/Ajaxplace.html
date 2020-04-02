@@ -1,0 +1,5 @@
+<option value="" selected disabled>Select Place</option>
+
+{% for place in places %}
+    <option value="{{ place.id }}">{{ place.place_name }}</option>
+{% endfor %}
