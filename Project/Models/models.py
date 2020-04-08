@@ -1,15 +1,15 @@
-from flask_user import UserMixin, UserManager
+from flask_login import UserMixin
 from Project import db, app
 
 # Define User data-model
-class Users(db.Model, UserMixin):
+
+class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     # User Authentication fields
     email = db.Column(db.String(255), nullable=False, unique=True)
     username = db.Column(db.String(255), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
-    email_confirmed_at = db.Column(db.DateTime())
     # Relationships
     roles = db.relationship('Roles', secondary='user_roles')
     doc_details = db.relationship('DoctorDetails', backref='docDetails')
@@ -28,7 +28,6 @@ class UserRoles(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id', ondelete='CASCADE'))
 
-user_manager = UserManager(app, db, Users)
 
 class District(db.Model):
     id = db.Column(db.Integer, primary_key=True)

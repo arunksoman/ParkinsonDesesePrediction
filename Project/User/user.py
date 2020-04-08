@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, session, request, url_for, redirect, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_user import login_required, current_user, roles_required
-from flask_login import logout_user
+from flask_login import logout_user, login_required, current_user
 from ..Models.models import *
 import time
 from random import uniform

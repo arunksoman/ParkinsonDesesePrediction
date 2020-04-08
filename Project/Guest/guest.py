@@ -1,12 +1,9 @@
 from flask import Blueprint, render_template, session, request, url_for, redirect, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_user import login_required, current_user, roles_required
-from flask_login import login_user, logout_user, login_required
-from flask_login import logout_user
+from flask_login import login_required, logout_user, login_user
 from Project.Models.models import *
-from datetime import datetime as dt
 
-current_time = dt.now()
+# current_time = dt.now()
 
 guest = Blueprint('guest', __name__,template_folder='guest_templates',static_folder='guest_static',url_prefix='/Guest')
 
@@ -33,7 +30,10 @@ def login_post():
             return redirect(url_for('user.user_homepage'))
         if user.roles[0].name == 'Doctor':
             login_user(user, remember=remember)
-            return redirect(url_for('user.user_homepage'))
+            return redirect(url_for('doctor.doctor_homepage'))
+        if user.roles[0].name == 'Admin':
+            login_user(user, remember=remember)
+            return redirect("/admin")
 @guest.route('signup_user')
 def signup_user():
     return render_template('signup_user.html')
@@ -68,7 +68,7 @@ def signup_post():
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     # new_user = UserRegistration(user_email=email, user_name=name, user_password=generate_password_hash(password, method='sha256'))
     
-    new_user = Users(email=email, username=username, password=password,email_confirmed_at=current_time)
+    new_user = Users(email=email, username=username, password=password)
     new_user.roles = [user_role,]
     # add the new user to the database
     db.session.add(new_user)
@@ -99,7 +99,7 @@ def signup_doctor_post():
 
     # create new doctor with the form data. Hash the password so plaintext version isn't saved.
     # new_doctor = doctorRegistration(doctor_email=email, doctor_name=name, doctor_password=generate_password_hash(password, method='sha256'))
-    new_doctor = Users(email=email, username=username, password=password,email_confirmed_at=current_time)
+    new_doctor = Users(email=email, username=username, password=password)
     new_doctor.roles = [doctor_role,]
     # add the new doctor to the database
     db.session.add(new_doctor)

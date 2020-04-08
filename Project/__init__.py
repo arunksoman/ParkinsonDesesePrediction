@@ -6,6 +6,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_admin import Admin
 from .configurations import *
+# from flask_login import current_user
 
 
 # init SQLAlchemy so we can use it later in our models
@@ -13,17 +14,16 @@ db = SQLAlchemy()
 mail = Mail()
 app = Flask(__name__)
 Migrate(app, db.Model)
-admin = Admin(app, name='Project', template_mode='bootstrap3')
-
 
 def create_app():
-
     app.config['SECRET_KEY'] = '9OLWxNDhfvhjvj4o83j4K4iu3545860nhgkopO'
     app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 
     # For XAMPP
+    # app.config['FLASK_ADMIN_SWATCH'] = 'darkly'
     app.config['QLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+    
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@127.0.0.1/db_parkinson'
 
     # For freemysqlhosting.net 
@@ -33,14 +33,6 @@ def create_app():
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:mysql@127.0.0.1/db_project'
 
     db.init_app(app)
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['USER_EMAIL_SENDER_EMAIL'] = 'arunksoman5678@gmail.com'
-    app.config['MAIL_PASSWORD'] = '@'
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USE_SSL'] = True
-
-    mail.init_app(app)
     login_manager = LoginManager()
     login_manager.login_view = 'guest.login'
     login_manager.init_app(app)
@@ -57,7 +49,10 @@ def create_app():
 
     # blueprint for admin routes in our app
     from .Admin import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint.admin_blueprint)
+    app.register_blueprint(admin_blueprint.adminNew_blueprint)
+    from .Admin.admin import admin
+    admin.init_app(app)
+    mail.init_app(app)
 
     # blueprint for user routes in our app
     from .User import user as user_blueprint
