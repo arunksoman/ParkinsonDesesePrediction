@@ -6,6 +6,7 @@ import time
 from random import uniform
 from ..configurations import *
 from werkzeug.utils import secure_filename
+from .test_Parkinson import *
 
 user = Blueprint('user', __name__,template_folder='user_templates',static_folder='user_static',url_prefix='/User')
 
@@ -45,6 +46,7 @@ def user_details():
 def ajaxPlace(did):
     places = Place.query.filter_by(district_id=did).join(District).all()
     return render_template("Ajaxplace.html", places=places)
+
 
 
 @user.route('/editProfile', methods=["GET", "POST"])
@@ -92,3 +94,14 @@ def userEditProfile():
     district = District.query.all()
     places = Place.query.filter(Place.id==User_details.place_id).all()
     return render_template("user_edit_profile.html", user=user, user_details=user_details, districts=district, places=places)
+
+@user.route('/test_parkinson', methods=["GET", "POST"])
+def test_parkinson():
+    return render_template("user_test.html")
+
+@user.route('testForParkinson', methods=["POST"])
+def testForParkinson():
+    if request.method == "POST":
+        data = request.get_json()['base64']
+        print(data)
+        return jsonify(check_parkinson(data))
