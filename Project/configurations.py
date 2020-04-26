@@ -3,6 +3,7 @@ import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 ADMIN_DIR = os.path.join(BASE_DIR, "Admin")
+USER_DIR = os.path.join(BASE_DIR, "User")
 DATASET_DIR = os.path.join(ADMIN_DIR, "Dataset")
 DATASET_SPLIT_DIR = os.path.join(ADMIN_DIR, 'Output')
 HEALTHY_DIR = os.path.join(DATASET_DIR, "Healthy")

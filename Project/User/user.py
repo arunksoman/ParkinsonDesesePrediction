@@ -7,8 +7,14 @@ from random import uniform
 from ..configurations import *
 from werkzeug.utils import secure_filename
 from .test_Parkinson import *
+from datetime import datetime
 
 user = Blueprint('user', __name__,template_folder='user_templates',static_folder='user_static',url_prefix='/User')
+
+def save(encoded_data, filename):
+    nparr = np.fromstring(base64.b64decode(encoded_data), np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    return cv2.imwrite(filename, img)
 
 @user.route('/user_homepage')
 @login_required
@@ -103,5 +109,20 @@ def test_parkinson():
 def testForParkinson():
     if request.method == "POST":
         data = request.get_json()['base64']
-        print(data)
-        return jsonify(check_parkinson(data))
+        # print(data)
+        TEST_IMAGE_STORAGE = os.path.join(USER_DIR, "Test_Image_Storage")
+        if not os.path.exists(TEST_IMAGE_STORAGE):
+            os.mkdir(TEST_IMAGE_STORAGE)
+        timestamp = datetime.now()
+        ts = timestamp.strftime("%d-%m-%Y-%I-%M-%S-%p")
+        file_name = str(current_user.id) + "-" + current_user.username + "-" + str(ts) + ".png"
+        file_name = os.path.join(TEST_IMAGE_STORAGE, file_name)
+        print(file_name)
+        save(data.split(',')[1], file_name)
+        test_result = check_parkinson(data)
+        add_result = Test_results(user_id=current_user.id, test_img_name=file_name.split(os.path.sep)[-1],
+                                test_result=test_result['result'])
+        db.session.add(add_result)
+        db.session.commit()
+        return jsonify(test_result)
+

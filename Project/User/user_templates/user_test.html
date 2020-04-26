@@ -6,6 +6,10 @@
     {% block body %}
         <div class="w3-container w3-padding-64">
             <script>
+                function AddButton(element) {
+                    var options = document.getElementById("options");
+                    options.innerHTML = options.innerHTML + "<a href='book_doctor' class='w3-btn w3-small w3-red'>Add</a><br>";
+                 }
                 function ajaxCall(value){
                     $.ajax({
                         type: 'POST',
@@ -14,9 +18,12 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success:function (data) {
-                            console.log(data)
-                            console.log(data.result)
-                            doubleClicked();
+                            console.log(data);
+                            console.log(data.result);
+                            if(data.result == "Parkinson"){
+                                AddButton();
+                            }
+                            // doubleClicked();
                         }
                     });
                 }
@@ -51,6 +58,9 @@
             <div class="w3-display-bottommiddle" style="bottom:30%; right: 35%;">
                 <button class="w3-btn w3-blue w3-small" name="btn_erase" id="btn_erase" onclick="doubleClicked()" >Erase</button>
                 <button class="w3-btn w3-blue w3-small" name="btn_parkinson" id="btn_parkinson" onclick="convertData()" >Test</button>
+                <div id="bk-doctor">
+
+                </div>
                 <script src = "{{ url_for('static', filename = 'js/p5.min.js') }}" ></script>
                 <script src = "{{ url_for('static', filename = 'js/jquery.min.js') }}" ></script>
 

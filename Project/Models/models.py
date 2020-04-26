@@ -16,6 +16,7 @@ class Users(UserMixin, db.Model):
     appoinment_to_doctor = db.relationship('Appoinment', backref='doctor_appointed', foreign_keys= 'Appoinment.doctor_id')
     appoinment_for_user = db.relationship('Appoinment', backref='user_for_appoinment', foreign_keys='Appoinment.user_id')
     details_of_user = db.relationship('User_details', backref='user_details', foreign_keys='User_details.user_id')
+    user_test_result = db.relationship('Test_results', backref='test_results', foreign_keys='Test_results.user_id')
 
 # Define the Role data-model
 class Roles(db.Model):
@@ -95,3 +96,9 @@ class User_details(db.Model):
     address = db.Column(db.String(150), nullable=False)
     contact = db.Column(db.String(50), nullable=False)
     image = db.Column(db.String(150), nullable=True)
+
+class Test_results(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    test_img_name = db.Column(db.String(150), nullable=False, unique=True)
+    test_result = db.Column(db.String(150), nullable=False)
