@@ -68,17 +68,21 @@ class Hospital(db.Model):
     hospital_contact = db.Column(db.String(50), nullable=False)
     hospital_email = db.Column(db.String(50), nullable=False)
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'),nullable=False)
+    hospital_of_doctor = db.relationship('DoctorDetails', backref='doctorDetails', foreign_keys='DoctorDetails.hospital_id')
 
 class DoctorDetails(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'),nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable=False)
+    doctor_gender = db.Column(db.String(150), nullable=False)
     doctor_address = db.Column(db.String(150), nullable=False)
     doctor_contact = db.Column(db.String(50), nullable=False)
     doctor_specialization = db.Column(db.Integer, db.ForeignKey('specialization.id'),nullable=False)
     doctor_department = db.Column(db.Integer, db.ForeignKey('department.id'),nullable=False)
     doctor_registration = db.Column(db.String(50), nullable=False)
     doctor_image = db.Column(db.String(150), nullable=True)
+    hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'),nullable=False)
+    doctor_status = db.Column(db.Integer, default=0)
 
 class Appoinment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

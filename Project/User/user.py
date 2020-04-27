@@ -45,7 +45,7 @@ def user_details():
         db.session.add(add_details)
         db.session.commit()
     districts = District.query.all()
-    return render_template("user_details.html", districts=districts)
+    return render_template("user_details.html", districts=districts, name=current_user.username)
     # return redirect(url_for("user.user_homepage"))
 
 @user.route('/ajaxPlace/<did>')
@@ -103,7 +103,7 @@ def userEditProfile():
 
 @user.route('/test_parkinson', methods=["GET", "POST"])
 def test_parkinson():
-    return render_template("user_test.html")
+    return render_template("user_test.html",name=current_user.username)
 
 @user.route('testForParkinson', methods=["POST"])
 def testForParkinson():
@@ -126,3 +126,6 @@ def testForParkinson():
         db.session.commit()
         return jsonify(test_result)
 
+@user.route('/book_doctor', methods=["GET", "POST"])
+def book_doctor():
+    return render_template("book_doctor.html",name=current_user.username)

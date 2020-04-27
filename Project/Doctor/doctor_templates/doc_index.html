@@ -3,5 +3,12 @@
 
 {% endblock head %}
 {% block body %}
-
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="w3-panel w3-red w3-display-container" style="margin-bottom:0px">
+                <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">&times;</span>
+                <h6>{{ messages[0] }}</h6>
+            </div>
+        {% endif %}
+    {% endwith %}
 {% endblock body %}

@@ -1,0 +1,88 @@
+{% extends 'doc_layout.html' %}
+    {% block head %}
+    <script>
+        function get_place(did){
+            alert(did);
+            url = "ajaxPlace/" + did
+            fetch(url).then(data => data.text()).then(data => {
+            document.getElementById('slct_place').innerHTML = data
+            })
+        }
+    </script>
+        <title>Edit Profile</title>
+    {% endblock head %}
+
+        {% block body %}
+        <div style="margin-left:30%">
+            <div class="w3-container" style="width:300px">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="w3-panel w3-red w3-display-container" style="margin-bottom:0px">
+                            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">&times;</span>
+                            <h6>{{ messages[0] }}</h6>
+                        </div>
+                {% endif %}
+                {% endwith %}
+                <div class="w3-card-4">
+                    <div class="w3-container w3-teal">
+                    <h4 class="w3-center">Enter Details</h4>
+                </div>
+                <form action="editProfile" method="post" class="w3-container" enctype="multipart/form-data">
+                    <label for="">Name</label>
+                    <input class="w3-input" type="text" name="txt_name" value="{{ doctor.username }}" id="">
+                    <label for="">Email</label>
+                    <input class="w3-input" type="email" name="txt_email" id="" value={{ doctor.email }}>
+                    <label for=""></label>
+                    <label for="">Select District</label>
+                    <select required class="w3-select" name="slct_district" id="slct_district" onchange="get_place(this.value)">
+                        <option value="" selected disabled>Select District</option>
+                        {% for district in districts %}
+                            <option {% if(district.id == doctor_details.2) %} selected {% endif %} value="{{ district.id }}">{{ district.district_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="">Select Place</label>
+                    <select required class="w3-select" name="slct_place" id="slct_place">
+                        <option value="" selected disabled>Select Place</option>
+                        {% for place in places %}
+                            <option {% if(place.id == doctor_details.1) %} selected {% endif %} value="{{ place.id }}">{{ place.place_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <p>Gender</p>
+                    <p>
+                        <input {% if doctor_details.0.doctor_gender == "Male" %}checked{% endif %} required type="radio" name="rdb_gender" value="Male" id="rdb_male">
+                        <label>Male</label>
+                        <input {% if doctor_details.0.doctor_gender == "Female" %}checked{% endif %} required type="radio" name="rdb_gender" value="Female" id="rdb_female">
+                        <label>Female</label>
+                    </p>
+                    <label for="">Address</label>
+                    <textarea required class="w3-input" name="txt_address" id="" cols="15" rows="2">{{ doctor_details.0.doctor_address }}</textarea>
+                    <label for="">Contact</label>
+                    <input required class="w3-input" type="text" value="{{ doctor_details.0.doctor_contact }}" name="txt_contact" id="">
+                    <label for="">Profile Picture</label>
+                    <input type="hidden" name="hfile" value="{{ doctor_details.0.doctor_image }}">
+                    <input type="file" name="file" id="">
+                    <label for="">Select Hospital</label>
+                    <select required class="w3-select" name="slct_hospital" id="slct_hospital">
+                        <option value="" selected disabled>Select hospital</option>
+                        {% for hospital in hospitals %}
+                            <option {% if(hospital.id == doctor_details.0.hospital_id) %} selected {% endif %} value="{{ hospital.id }}">{{ hospital.hospital_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select required class="w3-select" name="slct_specialization" id="slct_specialization">
+                        <option value="" selected disabled>Select specialization</option>
+                        {% for specialization in specializations %}
+                            <option {% if(specialization.id == doctor_details.0.doctor_specialization) %} selected {% endif %} value="{{ specialization.id }}">{{ specialization.specialization_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select required class="w3-select" name="slct_department" id="slct_department">
+                        <option value="" selected disabled>Select department</option>
+                        {% for department in departments %}
+                        <option {% if(department.id == doctor_details.0.doctor_department) %} selected {% endif %} value="{{ department.id }}">{{ department.department }}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="w3-button w3-teal w3-small" type="submit" style="margin-bottom: 10px;display:block; margin:10px 0 10px 0" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock body %}
