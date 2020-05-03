@@ -67,6 +67,9 @@ def doctorEditProfile():
         gender = request.form.get("rdb_gender")
         address = request.form.get("txt_address")
         contact = request.form.get("txt_contact")
+        hospital_id = request.form.get("slct_hospital")
+        specialization_id = request.form.get("slct_specialization")
+        department_id = request.form.get("slct_department")
         file = request.files['file']
         print(request.files)
         if file.filename != "":
@@ -86,13 +89,16 @@ def doctorEditProfile():
         update_user.email = email
         db.session.commit()
         update_doctorDetails = DoctorDetails.query.filter_by(doctor_id=current_user.id).first()
-        update_doctorDetails.place_id = district
-        update_doctorDetails.gender = gender
-        update_doctorDetails.address = address
-        update_doctorDetails.contact = contact
-        update_doctorDetails.image = new_filename
+        update_doctorDetails.place_id = place
+        update_doctorDetails.doctor_gender = gender
+        update_doctorDetails.doctor_address = address
+        update_doctorDetails.doctor_contact = contact
+        update_doctorDetails.doctor_image = new_filename
+        update_doctorDetails.hospital_id = hospital_id
+        update_doctorDetails.doctor_specialization = specialization_id
+        update_doctorDetails.doctor_department = department_id
         db.session.commit()
-        return redirect(url_for("user.userEditProfile"))
+        return redirect(url_for("doctor.doctorEditProfile"))
         
     doctor = Users.query.filter_by(id=current_user.id).first()
     doctor_details = DoctorDetails.query.join(Place, Place.id==DoctorDetails.place_id).join(District, District.id==Place.district_id).add_columns(Place.id, District.id, Place.place_name, District.district_name).filter(DoctorDetails.doctor_id==current_user.id).first()
@@ -104,4 +110,3 @@ def doctorEditProfile():
     departments = Department.query.all()
     return render_template("doc_edit_profile.html", doctor=doctor, doctor_details=doctor_details, districts=district, departments=departments,
                             places=places, name=current_user.username, hospitals=hospitals, specializations=specializations)
-

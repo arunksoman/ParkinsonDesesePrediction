@@ -93,6 +93,10 @@ class CustomPlaceView(AdminModelView):
 class CustomSpecialization(AdminModelView):
     form_columns = ['specialization_name']
 
+class CustomHospitalView(AdminModelView):
+    form_columns = ['hospital_name', 'hospital_address', 'hospital_contact',
+                    'hospital_email','Place']
+
 class DatasetPrep(AdminBaseView):
     @expose('/')
     def preprocess_dataset(self):
@@ -109,11 +113,13 @@ class LogoutAdmin(AdminBaseView):
     def logoutAdmin(self):
         return redirect(url_for("main.logout"))
 
+
+
 admin.add_view(CustomDistrictView(District,db.session))
 admin.add_view(CustomPlaceView(Place,db.session))
 admin.add_view(CustomSpecialization(Specialization, db.session))
 admin.add_view(AdminModelView(Department, db.session))
-admin.add_view(AdminModelView(Hospital, db.session))
+admin.add_view(CustomHospitalView(Hospital, db.session))
 
 admin.add_view(DatasetPrep(name='Dataset Preparation'))
 admin.add_view(MakeTrainTestSplit(name='Make Train Test split'))

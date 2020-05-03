@@ -86,7 +86,7 @@ def userEditProfile():
         update_user.email = email
         db.session.commit()
         update_useDetails = User_details.query.filter_by(user_id=current_user.id).first()
-        update_useDetails.place_id = district
+        update_useDetails.place_id = place
         update_useDetails.gender = gender
         update_useDetails.age = age
         update_useDetails.address = address
@@ -128,4 +128,7 @@ def testForParkinson():
 
 @user.route('/book_doctor', methods=["GET", "POST"])
 def book_doctor():
-    return render_template("book_doctor.html",name=current_user.username)
+    doctors = db.engine.execute('select * from doctor_details as dd inner join users u inner join user_roles ur on dd.doctor_id = u.id and u.id = ur.role_id where ur.role_id=1')
+    # for doctor in doctors:
+    #     print(doctor)
+    return render_template("book_doctor.html",name=current_user.username, doctors=doctors)

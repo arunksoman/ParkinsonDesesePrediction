@@ -86,7 +86,7 @@ class DoctorDetails(db.Model):
 
 class Appoinment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    appoinment_date = db.Column(db.String(50), nullable=False)
+    appoinment_date = db.Column(db.String(50), nullable=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     appoinment_status = db.Column(db.Integer, nullable=False, default=0)
