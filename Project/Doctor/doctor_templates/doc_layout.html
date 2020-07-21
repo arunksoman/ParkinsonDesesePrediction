@@ -14,14 +14,14 @@
 
     {% endblock head %}
 </head>
-<body style="background-image: url('{{ url_for('doctor.static', filename='img/Phishing-scam.jpg') }}');background-size:cover;height:100vh;">
+<body style="background-image: url('{{ url_for('static', filename='img/medical.jpg') }}');background-size:cover;height:100vh;">
     {% block navbar %}
         <!-- Navbar -->
         <div class="w3-top">
             <div class="w3-bar w3-teal w3-card">
                 <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
                 <a href="#" class="w3-bar-item w3-blue w3-button w3-padding-large w3-hide-small w3-right">{{ name }}</a>
-                <a href="#" class="w3-bar-item w3-button w3-padding-large w3-right">Logout</a>
+                <a href="{{ url_for('main.logout') }}" class="w3-bar-item w3-button w3-padding-large w3-right">Logout</a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-right">View Booking</a>
                 <div class="w3-right w3-dropdown-hover w3-hide-small">
                     <button class="w3-padding-large w3-button" title="More">Settings <i class="fa fa-caret-down"></i></button>     
