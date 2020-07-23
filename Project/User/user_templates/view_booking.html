@@ -1,0 +1,39 @@
+{% extends 'user_layout.html' %}
+    {% block head %}
+    <script>
+        function get_place(did){
+            alert(did);
+            url = "ajaxPlace/" + did
+            fetch(url).then(data => data.text()).then(data => {
+            document.getElementById('slct_place').innerHTML = data
+            })
+        }
+    </script>
+        <title>User Deails</title>
+    {% endblock head %}
+
+        {% block body %}
+        <div style="margin-left:30%">
+            <div class="w3-container" style="width:300px">
+                    <table class="w3-table w3-white w3-hoverable w3-centered w3-card-4">
+                        <tr>
+                            <td>Sl. No.</td>
+                            <td>Doctor</td>
+                            <td>Booking Date</td>
+                            <td>Date</td>
+                            <td>Status</td>
+                        </tr>
+                    
+                        {% for appoinment in appoinments %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ appoinment.0 }}</td>
+                            <td>{{ appoinment.2 }}</td>
+                            <td>{{ appoinment.3 }}</td>
+                            <td>{% if appoinment.1 == 0 %}<button class="w3-blue w3-button">Pending</button>{% endif %}{% if appoinment.1 == 1 %}<button class="w3-green w3-button">Acceped</button>{% endif %}{% if appoinment.1 == 2 %}<button class="w3-red w3-button">Rejected</button>{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endblock body %}

@@ -1,0 +1,32 @@
+{% extends 'doc_layout.html' %}
+    {% block head %}
+        <title>Book Doctor</title>
+    {% endblock head %}
+
+    {% block body %}
+    
+        <div class="w3-container" style="width:300px">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="w3-panel w3-red w3-display-container" style="margin-bottom:0px">
+                        <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">&times;</span>
+                        <h6>{{ messages[0] }}</h6>
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="w3-card-4">
+                <div class="w3-container w3-teal">
+                    <h2 class="w3-center">User Signup</h2>
+                </div>
+                <form action="signup_user" class="w3-container" method="post">
+                    <label for="">Name</label>
+                    <input required class="w3-input" type="text" name="name" id="name">
+                    <label for="">Email</label>
+                    <input required class="w3-input" type="text" name="email" id="email">
+                    <label for="">Password</label>
+                    <input required class="w3-input" type="password" name="password" id="password">
+                    <input class="w3-button w3-teal w3-small" type="submit" style="margin-bottom: 10px;display:block; margin:10px 0 10px 0" value="Submit">
+            </form>
+        </div>
+    </div>
+{% endblock %}

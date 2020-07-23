@@ -111,3 +111,32 @@ def doctorEditProfile():
     departments = Department.query.all()
     return render_template("doc_edit_profile.html", doctor=doctor, doctor_details=doctor_details, districts=district, departments=departments,
                             places=places, name=current_user.username, hospitals=hospitals, specializations=specializations)
+
+
+@doctor.route("/view_bookings")
+def view_bookings():
+    # return render_template("view_booking.html")
+    uid = current_user.id
+    appoinments = db.engine.execute('select u.username, a.appoinment_status, a.booking_date, a.id from appoinment a inner join users u on u.id=a.doctor_id where a.doctor_id={}'.format(uid))
+    # for appoinment in appoinments:
+    #     print(appoinment)
+    print(appoinments)
+    if not appoinments:
+        return render_template("doc_viewBooking.html", no_appoinment="nothing")
+    return render_template("doc_viewBooking.html", appoinments=appoinments)
+
+
+@doctor.route("/booking_actions", methods=["GET", "POST"])
+def booking_action():
+    app_id = request.args.get("app_id")
+    if request.method == "POST":
+        app_id = request.form.get("app_id")
+        print(app_id)
+        date = request.form.get("appoinment_date")
+        action = request.form.get("doc_action")
+        update_this = Appoinment.query.filter_by(id=app_id).first()
+        update_this.appoinment_status = action
+        update_this.appoinment_date = date
+        db.session.commit()
+
+    return render_template("booking_action.html", hid=app_id)

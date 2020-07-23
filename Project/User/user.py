@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import logout_user, login_required, current_user
 from ..Models.models import *
 import time
+from datetime import datetime
 from random import uniform
 from ..configurations import *
 from werkzeug.utils import secure_filename
@@ -144,8 +145,21 @@ def book_doctor():
 
 @user.route("/appoinment")
 def book_now():
-    return "sucees"
+    did = request.args.get('doc_id')
+    book_date = datetime.now().strftime('%Y-%m-%d')
+    uid = current_user.id
+    ap_status = "0"
+    new_appoinment = Appoinment(booking_date=book_date, doctor_id=did, user_id=uid, appoinment_status=ap_status)
+    db.session.add(new_appoinment)
+    db.session.commit()
+    return redirect(url_for('user.view_booking'))
 @user.route("/view_booking")
 def view_booking():
-    return render_template("view_booking.html")
+    # return render_template("view_booking.html")
+    uid = current_user.id
+    print(uid)
+    appoinments = db.engine.execute('select u.username, a.appoinment_status, a.booking_date, a.appoinment_date from appoinment a inner join users u on u.id=a.doctor_id where a.user_id={}'.format(uid))
+    # for appoinment in appoinments:
+    #     print(appoinment)
+    return render_template("view_booking.html", appoinments=appoinments)
 
