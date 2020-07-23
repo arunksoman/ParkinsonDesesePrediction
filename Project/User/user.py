@@ -97,6 +97,8 @@ def userEditProfile():
         
     user = Users.query.filter_by(id=current_user.id).first()
     user_details = User_details.query.join(Place, Place.id==User_details.place_id).join(District, District.id==Place.district_id).add_columns(Place.id, District.id, Place.place_name, District.district_name).filter(User_details.user_id==current_user.id).first()
+    if not user_details:
+            return render_template("enter_details.html")
     district = District.query.all()
     places = Place.query.filter(Place.id==User_details.place_id).all()
     return render_template("user_edit_profile.html", user=user, user_details=user_details, districts=district, places=places)
@@ -132,3 +134,8 @@ def book_doctor():
     # for doctor in doctors:
     #     print(doctor)
     return render_template("book_doctor.html",name=current_user.username, doctors=doctors)
+
+@user.route("/view_booking")
+def view_booking():
+    return render_template("view_booking.html")
+

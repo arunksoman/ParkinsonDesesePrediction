@@ -6,9 +6,21 @@
     {% block body %}
         <div class="w3-container w3-padding-64">
             <script>
-                function AddButton(element) {
+                function clear_button(){
                     var options = document.getElementById("bk_doctor");
-                    options.innerHTML = options.innerHTML + "<a href='book_doctor' class='w3-btn w3-small w3-red'>Book Doctor</a><br>";
+                    options.innerHTML = "";
+                }
+                function warning_alert(){
+                    var warning = document.getElementById("info");
+                    warning.innerHTML = "<div class=\"w3-panel w3-red w3-display-container\"><span onclick=\"this.parentElement.style.display='none'\" class=\"w3-button w3-large w3-display-topright\">&times;</span><h3>Danger!</h3><p>Sorry. We suspect Parkinson...</p></div>";
+                }
+                function info_alert(){
+                    var warning = document.getElementById("info");
+                    info.innerHTML = "<div class=\"w3-panel w3-blue w3-display-container\"><span onclick=\"this.parentElement.style.display='none'\" class=\"w3-button w3-large w3-display-topright\">&times;</span><h3>Info!</h3><p>Hurray... You don't have Parkinson Disease</p></div>";
+                }
+                function AddButton() {
+                    var options = document.getElementById("bk_doctor");
+                    options.innerHTML = "<a href='book_doctor' class='w3-btn w3-small w3-red'>Book Doctor</a><br>";
                  }
                 function ajaxCall(value){
                     $.ajax({
@@ -22,6 +34,11 @@
                             console.log(data.result);
                             if(data.result == "Parkinson"){
                                 AddButton();
+                                warning_alert();
+                            }
+                            else{
+                                    info_alert();
+                                    clear_button();
                             }
                             // doubleClicked();
                         }
@@ -58,14 +75,17 @@
             <div class="w3-display-bottommiddle" style="bottom:30%; right: 35%;">
                 <button class="w3-btn w3-blue w3-small" name="btn_erase" id="btn_erase" onclick="doubleClicked()" >Erase</button>
                 <button class="w3-btn w3-blue w3-small" name="btn_parkinson" id="btn_parkinson" onclick="convertData()" >Test</button>
-                <div id="bk_doctor">
-
-                </div>
+                
                 <script src = "{{ url_for('static', filename = 'js/p5.min.js') }}" ></script>
                 <script src = "{{ url_for('static', filename = 'js/jquery.min.js') }}" ></script>
 
             </div>
+            <div style="margin-top: 210px; margin-left: 270px;" id="bk_doctor">
+
+            </div>
+            <div style="margin-top: 100px;" id="info">
+        
+            </div>
         </div>
     </div>
-        
 {% endblock body %}

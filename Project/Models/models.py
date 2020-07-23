@@ -86,6 +86,7 @@ class DoctorDetails(db.Model):
 
 class Appoinment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    booking_date = db.Column(db.String(50), nullable=False)
     appoinment_date = db.Column(db.String(50), nullable=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -106,3 +107,4 @@ class Test_results(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     test_img_name = db.Column(db.String(150), nullable=False, unique=True)
     test_result = db.Column(db.String(150), nullable=False)
+

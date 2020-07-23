@@ -102,7 +102,8 @@ def doctorEditProfile():
         
     doctor = Users.query.filter_by(id=current_user.id).first()
     doctor_details = DoctorDetails.query.join(Place, Place.id==DoctorDetails.place_id).join(District, District.id==Place.district_id).add_columns(Place.id, District.id, Place.place_name, District.district_name).filter(DoctorDetails.doctor_id==current_user.id).first()
-    print(doctor_details)
+    if not doctor_details:
+        return render_template("enter_details.html")
     district = District.query.all()
     places = Place.query.filter(Place.id==DoctorDetails.place_id).all()
     hospitals = Hospital.query.all()
