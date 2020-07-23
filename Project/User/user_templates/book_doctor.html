@@ -15,17 +15,27 @@
         {% block body %}
         <div style="margin-left:30%">
             <div class="w3-container" style="width:300px">
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <div class="w3-panel w3-red w3-display-container" style="margin-bottom:0px">
-                            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">&times;</span>
-                            <h6>{{ messages[0] }}</h6>
-                        </div>
-                {% endif %}
-                {% endwith %}
-                <div class="w3-card-4">
+                    <table class="w3-table w3-white w3-hoverable w3-centered w3-card-4">
+                        <tr>
+                            <td>Doctor Image</td>
+                            <td>Name</td>
+                            <td>Specialization</td>
+                            <td>Department</td>
+                            <td>Hospital</td>
+                            <td>Book Now</td>
+                        </tr>
                     
-                </div>
+                        {% for doctor in doctors %}
+                        <tr>
+                            <td><img src="{{ url_for('user.send_file', file_name=doctor.5) }}" width="150", height="150"></td>
+                            <td>{{ doctor.1 }}</td>
+                            <td>{{ doctor.4 }}</td>
+                            <td>{{ doctor.3 }}</td>
+                            <td>{{ doctor.2 }}</td>
+                            <td><a href="{{ url_for('user.book_now', doc_id=doctor.0) }}" class="w3-button w3-small w3-blue">Book Now</a></td>
+                        </tr>
+                        {% endfor %}
+                </table>
             </div>
         </div>
     {% endblock body %}

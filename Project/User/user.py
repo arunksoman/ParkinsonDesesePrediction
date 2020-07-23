@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, request, url_for, redirect, flash, jsonify
+from flask import Blueprint, render_template, session, request, url_for, redirect, flash, jsonify,send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import logout_user, login_required, current_user
 from ..Models.models import *
@@ -21,6 +21,12 @@ def save(encoded_data, filename):
 # @roles_required('User')
 def user_homepage():
     return render_template('user_index.html', name=current_user.username)
+
+@user.route('/img', methods=["GET"]) 
+def send_file():
+    filename= request.args.get("file_name")
+    print(filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @user.route('/add_details', methods=["GET", "POST"])
 def user_details():
@@ -130,11 +136,15 @@ def testForParkinson():
 
 @user.route('/book_doctor', methods=["GET", "POST"])
 def book_doctor():
-    doctors = db.engine.execute('select * from doctor_details as dd inner join users u inner join user_roles ur on dd.doctor_id = u.id and u.id = ur.role_id where ur.role_id=1')
+    doctors = db.engine.execute('select u.id,u.username, h.hospital_name, d.department, s.specialization_name,dd.doctor_image from doctor_details as dd inner join users u inner join hospital as h inner join department as d inner join specialization as s on dd.doctor_id = u.id and dd.hospital_id=h.id and dd.doctor_specialization=s.id and dd.doctor_department=d.id')
     # for doctor in doctors:
     #     print(doctor)
-    return render_template("book_doctor.html",name=current_user.username, doctors=doctors)
+    print(UPLOAD_DIR)
+    return render_template("book_doctor.html", name=current_user.username, doctors=doctors, upload_dir=UPLOAD_DIR)
 
+@user.route("/appoinment")
+def book_now():
+    return "sucees"
 @user.route("/view_booking")
 def view_booking():
     return render_template("view_booking.html")

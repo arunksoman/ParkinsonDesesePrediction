@@ -9,11 +9,12 @@ DATASET_SPLIT_DIR = os.path.join(ADMIN_DIR, 'Output')
 HEALTHY_DIR = os.path.join(DATASET_DIR, "Healthy")
 PARKINSON_DIR = os.path.join(DATASET_DIR, "Parkinson")
 UPLOAD_DIR = os.path.join(BASE_DIR, "Uploads")
+print(UPLOAD_DIR)
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 if not os.path.exists(UPLOAD_DIR):
-    os.mkdir(DATASET_DIR)
+    os.mkdir(UPLOAD_DIR)
 if not os.path.exists(DATASET_DIR):
     os.mkdir(DATASET_DIR)
 if not os.path.exists(HEALTHY_DIR):
