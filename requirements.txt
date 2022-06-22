@@ -30,7 +30,7 @@ matplotlib==3.2.0
 mccabe==0.6.1
 mysql-connector-python==8.0.19
 networkx==2.4
-numpy==1.18.1
+numpy==1.22.0
 opencv-python==4.2.0.32
 passlib==1.7.2
 Pillow==7.0.0
